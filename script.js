@@ -136,6 +136,4 @@ const onFormSubmit = (event) => {
 	loginFormRef.reset();
 };
 
-// // loginFormRef.addEventListener('submit', onFormSubmit);
-// console.log(divRef.nodeName);
-// console.log(newList.nodeName);
+// loginFormRef.addEventListener('submit', onFormSubmit);
