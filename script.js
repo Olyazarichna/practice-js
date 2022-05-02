@@ -76,21 +76,7 @@ function renderList() {
     .join("");
   newList.insertAdjacentHTML("beforeend", markup);
 
-  const pRef = document.querySelectorAll(".booktitle");
 
-  pRef.forEach((item) => {
-    item.addEventListener("click", onClickTitle);
-  });
-
-  const btnDelEl = document.querySelectorAll(".btndel");
-  const btnEditEl = document.querySelectorAll(".btnedit");
-
-  btnDelEl.forEach((item) => {
-    item.addEventListener("click", deleteBook);
-  });
-  btnEditEl.forEach((item) => {
-    item.addEventListener("click", editBook);
-  });
 }
 
 renderList();
