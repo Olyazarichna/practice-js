@@ -76,14 +76,27 @@ function renderList() {
     .join("");
   newList.insertAdjacentHTML("beforeend", markup);
 
+  const pRef = document.querySelectorAll(".booktitle");
 
+  pRef.forEach((item) => {
+    item.addEventListener("click", onClickTitle);
+  });
+
+  const btnDelEl = document.querySelectorAll(".btndel");
+  const btnEditEl = document.querySelectorAll(".btnedit");
+
+  btnDelEl.forEach((item) => {
+    item.addEventListener("click", deleteBook);
+  });
+  btnEditEl.forEach((item) => {
+    item.addEventListener("click", editBook);
+  });
 }
 
 renderList();
 
 function onClickTitle(event) {
   //  console.log(event.target.textContent);
-  
   const book = books.find((book) => book.title === event.target.textContent);
   const markup = createPreviewMarkup(book);
   console.log(markup);
@@ -101,25 +114,3 @@ function deleteBook() {
 function editBook() {
   console.log("edit");
 }
-
-
-const loginFormRef = document.querySelector('.login-form');
-
-const onFormSubmit = (event) => {
-	event.preventDefault();
-
-	const {
-		elements: {
-			email: { value: email },
-			password: { value: password },
-		},
-	} = event.currentTarget;
-
-	!email || !password
-		? alert('Пожалуйста, заполните ВСЕ поля')
-		: console.log({ email: password });
-
-	loginFormRef.reset();
-};
-
-// loginFormRef.addEventListener('submit', onFormSubmit);
