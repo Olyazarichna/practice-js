@@ -1,6 +1,6 @@
 const books = [
   {
-    id: "1",
+    id: '1',
     title: `Apple. Эволюция компьютера`,
     author: `Владимир Невзоров`,
     img: `https://bukva.ua/img/products/449/449532_200.jpg`,
@@ -13,7 +13,7 @@ const books = [
     Она также может послужить источником вдохновения для дизайнеров, маркетологов и предпринимателей.`,
   },
   {
-    id: "2",
+    id: '2',
     title: `Как объяснить ребенку информатику`,
     author: `Кэрол Вордерман`,
     img: `https://bukva.ua/img/products/480/480030_200.jpg`,
@@ -26,7 +26,7 @@ const books = [
     объясняются наглядно с помощью иллюстраций и схем.`,
   },
   {
-    id: "3",
+    id: '3',
     title: `Путь скрам-мастера. #ScrumMasterWay`,
     author: `Зузана Шохова`,
     img: `https://bukva.ua/img/products/480/480090_200.jpg`,
@@ -38,58 +38,61 @@ const books = [
     какими инструментами ему нужно пользоваться.`,
   },
 ];
+const KEY = 'books';
+localStorage.setItem(KEY, JSON.stringify(books));
 
-const divRef = document.querySelector("#root");
+const divRef = document.querySelector('#root');
 
-const newDiv1 = document.createElement("div");
-const newDiv2 = document.createElement("div");
+const newDiv1 = document.createElement('div');
+const newDiv2 = document.createElement('div');
 
-newDiv1.classList.add("leftDiv");
-newDiv2.classList.add("rightDiv");
+newDiv1.classList.add('leftDiv');
+newDiv2.classList.add('rightDiv');
 
 divRef.append(newDiv1, newDiv2);
 
-const heading = document.createElement("h1");
-const newList = document.createElement("ul");
-const buttonAdd = document.createElement("button");
+const heading = document.createElement('h1');
+const newList = document.createElement('ul');
+const buttonAdd = document.createElement('button');
 
-heading.textContent = "Library";
-buttonAdd.textContent = "ADD";
+heading.textContent = 'Library';
+buttonAdd.textContent = 'ADD';
 
-heading.classList.add("title");
-newList.classList.add("list");
-buttonAdd.classList.add("btn-add");
+heading.classList.add('title');
+newList.classList.add('list');
+buttonAdd.classList.add('btn-add');
 
 newDiv1.append(heading, newList, buttonAdd);
 
 function renderList() {
+  const books = JSON.parse(localStorage.getItem(KEY));
   const markup = books
-    .map(({ title }) => {
+    .map(({ id, title }) => {
       return `
-    <li class = "list_item"> 
+    <li id=${id} class ="list_item"> 
     <p class="booktitle">${title}</p>
     <button class="btn btnedit" type="button">Edit</button>
     <button class="btn btndel" type="button">Delete</button>
      </li>
     `;
     })
-    .join("");
-  newList.insertAdjacentHTML("beforeend", markup);
+    .join('');
+  newList.insertAdjacentHTML('beforeend', markup);
 
-  const pRef = document.querySelectorAll(".booktitle");
+  const pRef = document.querySelectorAll('.booktitle');
 
-  pRef.forEach((item) => {
-    item.addEventListener("click", onClickTitle);
+  pRef.forEach(item => {
+    item.addEventListener('click', onClickTitle);
   });
 
-  const btnDelEl = document.querySelectorAll(".btndel");
-  const btnEditEl = document.querySelectorAll(".btnedit");
+  const btnDelEl = document.querySelectorAll('.btndel');
+  const btnEditEl = document.querySelectorAll('.btnedit');
 
-  btnDelEl.forEach((item) => {
-    item.addEventListener("click", deleteBook);
+  btnDelEl.forEach(item => {
+    item.addEventListener('click', deleteBook);
   });
-  btnEditEl.forEach((item) => {
-    item.addEventListener("click", editBook);
+  btnEditEl.forEach(item => {
+    item.addEventListener('click', editBook);
   });
 }
 
@@ -97,21 +100,103 @@ renderList();
 
 function onClickTitle(event) {
   //  console.log(event.target.textContent);
-  const book = books.find((book) => book.title === event.target.textContent);
+  const books = JSON.parse(localStorage.getItem(KEY));
+  const book = books.find(book => book.title === event.target.textContent);
   const markup = createPreviewMarkup(book);
   console.log(markup);
-  newDiv2.innerHTML = "";
-  newDiv2.insertAdjacentHTML("afterbegin", markup);
+  newDiv2.innerHTML = '';
+  newDiv2.insertAdjacentHTML('afterbegin', markup);
 }
 
 function createPreviewMarkup({ title, author, img, plot }) {
   return `<h2 class="heading">${title}</h2> <p class="text">${author}</p> <img class="img" src="${img}" alt="picture"> <p class="text">${plot}</p>`;
 }
 
-function deleteBook() {
-  console.log("delete");
+function deleteBook(event) {
+  const books = JSON.parse(localStorage.getItem(KEY));
+  const id = event.target.parentNode.id;
+  const filterBooks = books.filter(book => book.id !== id);
+
+  localStorage.setItem(KEY, JSON.stringify(filterBooks));
+  newList.innerHTML = '';
+
+  // const title = newDiv2.children.item
+
+  const titleToRemove = newDiv2.firstChild.textContent;
+  const titleToCheck = books.find(book => book.id === id).title;
+  if (titleToCheck === titleToRemove) {
+    newDiv2.innerHTML = '';
+  }
+  renderList();
 }
 function editBook() {
-  console.log("edit");
+  console.log('edit');
 }
 
+buttonAdd.addEventListener('click', onBtnAdd);
+
+function onBtnAdd(){
+  newDiv2.innerHTML = '';
+
+  newDiv2.insertAdjacentHTML('afterbegin', createFormMarkup());
+
+  const newBook = {
+    id: Date.now(),
+    author: "",
+    title: "",
+    img: "",
+    plot: "",
+  }
+  formBookObj(newBook);
+  
+  const btnSave = document.querySelector('.btn-save');
+  btnSave.addEventListener('click', onBtnSave);
+
+  function onBtnSave() {
+    const values = Object.values(newBook);
+    const isEmptyField = values.some(v => v === '');
+    if(isEmptyField) {
+      alert("All fields must filled");
+    } else {
+     const oldBookData = JSON.parse(localStorage.getItem(KEY));
+     oldBookData.push(newBook);
+     const booksToSave = JSON.stringify(oldBookData);
+     localStorage.setItem(KEY, booksToSave);
+    }
+  }
+}
+function formBookObj(book) {
+  const inputEl = document.querySelectorAll('input');
+  inputEl.forEach(item =>item.addEventListener('change', onInputChange));
+
+function onInputChange(event) {
+  book[event.target.name] = event.target.name;
+}
+
+}
+
+
+
+function createFormMarkup() {
+  return `
+  <form class="book-form" action="">
+  <label for="">
+    Author
+    <input type="text" name="author">
+  </label>
+  <label for="">
+    Title
+    <input type="text" name="title">
+  </label>
+  <label for="">
+    Img Url
+    <input type="text" name="img">
+  </label>
+  <label for="">
+    Plot
+    <input type="text" name="plot">
+  </label>
+  <button class="btn btn-save" type="button">Save</button>
+</form>
+  `
+}

@@ -21,9 +21,11 @@
     border-radius: 5px;
     padding: 12px;
     border: 2px solid green;
-    margin-left: auto;
+    /* margin-left: auto; */
+    margin-left: 10px;
 }
-.btnedit{ 
+.btnedit{
+    margin-left: auto; 
   
 }
 .btn-add {
@@ -51,10 +53,32 @@
     font-size: 40px;
 }
 .text {
-    font-size: 25px;
+    font-size: 20px;
     padding-left: 30px;
     color: silver;
 }
 .img {
     padding-left: 30px;
+}
+
+.book-form {
+    display:flex;
+    flex-direction: column;
+    padding: 24px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.btn-save{
+    width: 100px;
+    margin: 20px;
+}
+label{
+    font-size: 20px;
+    color: rgb(80, 255, 240);
+    margin-top: 5px;
+}
+input {
+    padding: 8px;
+    display: flex;
+    margin-top: 5px;
 }
