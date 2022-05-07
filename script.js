@@ -99,7 +99,6 @@ function renderList() {
 renderList();
 
 function onClickTitle(event) {
-  //  console.log(event.target.textContent);
   const books = JSON.parse(localStorage.getItem(KEY));
   const book = books.find(book => book.title === event.target.textContent);
   const markup = createPreviewMarkup(book);
@@ -120,8 +119,6 @@ function deleteBook(event) {
   localStorage.setItem(KEY, JSON.stringify(filterBooks));
   newList.innerHTML = '';
 
-  // const title = newDiv2.children.item
-
   const titleToRemove = newDiv2.firstChild.textContent;
   const titleToCheck = books.find(book => book.id === id).title;
   if (titleToCheck === titleToRemove) {
@@ -129,74 +126,90 @@ function deleteBook(event) {
   }
   renderList();
 }
-function editBook() {
-  console.log('edit');
+
+function editBook(event) {
+  newDiv2.innerHTML = '';
+
+  const id = event.target.parentNode.id;
+
+  const books = JSON.parse(localStorage.getItem(KEY));
+  const book = books.find(book => book.id === id);
+
+  newDiv2.insertAdjacentHTML('afterbegin', createFormMarkup(book));
+
+  // const btnSaveEl = document.querySelector('.btn-save');
+  // btnSaveEl.addEventListener('click', onBtnSave);
+
+  // function onBtnSave() {
+  //   console.log("save edited");
+  // }
 }
 
 buttonAdd.addEventListener('click', onBtnAdd);
 
-function onBtnAdd(){
+function onBtnAdd() {
   newDiv2.innerHTML = '';
 
-  newDiv2.insertAdjacentHTML('afterbegin', createFormMarkup());
-
   const newBook = {
-    id: Date.now(),
-    author: "",
-    title: "",
-    img: "",
-    plot: "",
-  }
+    id: Date.now().toString(),
+    author: '',
+    title: '',
+    img: '',
+    plot: '',
+  };
+  newDiv2.insertAdjacentHTML('afterbegin', createFormMarkup(newBook));
   formBookObj(newBook);
-  
+
   const btnSave = document.querySelector('.btn-save');
   btnSave.addEventListener('click', onBtnSave);
 
   function onBtnSave() {
     const values = Object.values(newBook);
     const isEmptyField = values.some(v => v === '');
-    if(isEmptyField) {
-      alert("All fields must filled");
+    if (isEmptyField) {
+      alert('All fields must filled');
     } else {
-     const oldBookData = JSON.parse(localStorage.getItem(KEY));
-     oldBookData.push(newBook);
-     const booksToSave = JSON.stringify(oldBookData);
-     localStorage.setItem(KEY, booksToSave);
+      const oldBookData = JSON.parse(localStorage.getItem(KEY));
+      oldBookData.push(newBook);
+      const booksToSave = JSON.stringify(oldBookData);
+      localStorage.setItem(KEY, booksToSave);
+
+      newList.innerHTML = '';
+      renderList();
+      newDiv2.innerHTML = '';
+      newDiv2.insertAdjacentHTML('afterbegin', createFormMarkup(newBook));
     }
   }
 }
 function formBookObj(book) {
   const inputEl = document.querySelectorAll('input');
-  inputEl.forEach(item =>item.addEventListener('change', onInputChange));
+  inputEl.forEach(item => item.addEventListener('change', onInputChange));
 
-function onInputChange(event) {
-  book[event.target.name] = event.target.name;
+  function onInputChange(event) {
+    book[event.target.name] = event.target.value;
+  }
 }
 
-}
-
-
-
-function createFormMarkup() {
+function createFormMarkup(book) {
   return `
   <form class="book-form" action="">
   <label for="">
     Author
-    <input type="text" name="author">
+    <input type="text" name="author" value="${book.author}">
   </label>
   <label for="">
     Title
-    <input type="text" name="title">
+    <input type="text" name="title" value="${book.title}">
   </label>
   <label for="">
     Img Url
-    <input type="text" name="img">
+    <input type="text" name="img" value="${book.img}">
   </label>
   <label for="">
     Plot
-    <input type="text" name="plot">
+    <input type="text" name="plot" value="${book.plot}">
   </label>
   <button class="btn btn-save" type="button">Save</button>
 </form>
-  `
+  `;
 }
