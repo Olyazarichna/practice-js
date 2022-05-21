@@ -38,8 +38,12 @@ const books = [
     какими инструментами ему нужно пользоваться.`,
   },
 ];
+
 const KEY = 'books';
+
+if(!localStorage.getItem(KEY)){ 
 localStorage.setItem(KEY, JSON.stringify(books));
+};
 
 const divRef = document.querySelector('#root');
 
@@ -119,7 +123,7 @@ function deleteBook(event) {
   localStorage.setItem(KEY, JSON.stringify(filterBooks));
   newList.innerHTML = '';
 
-  const titleToRemove = newDiv2.firstChild.textContent;
+  const titleToRemove = newDiv2?.firstChild?.textContent;
   const titleToCheck = books.find(book => book.id === id).title;
   if (titleToCheck === titleToRemove) {
     newDiv2.innerHTML = '';
@@ -137,12 +141,29 @@ function editBook(event) {
 
   newDiv2.insertAdjacentHTML('afterbegin', createFormMarkup(book));
 
-  // const btnSaveEl = document.querySelector('.btn-save');
-  // btnSaveEl.addEventListener('click', onBtnSave);
+  formBookObj(book);
 
-  // function onBtnSave() {
-  //   console.log("save edited");
-  // }
+  const btnSaveEl = document.querySelector('.btn-save');
+  btnSaveEl.addEventListener('click', onBtnSave);
+
+  function onBtnSave() {
+  
+
+    const indexOfBook = books.indexOf(book);
+
+    books.splice(indexOfBook, 1, book);
+
+    localStorage.setItem(KEY, JSON.stringify(books));
+    newList.innerHTML = '';
+    renderList();
+    newDiv2.innerHTML = '';
+  
+    newDiv2.insertAdjacentHTML("afterbegin",createPreviewMarkup(book));
+
+    setTimeout(() => {
+      alert('Book added successfully')}, 2000);
+
+  }
 }
 
 buttonAdd.addEventListener('click', onBtnAdd);
