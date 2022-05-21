@@ -38,7 +38,6 @@ const books = [
     какими инструментами ему нужно пользоваться.`,
   },
 ];
-
 const KEY = 'books';
 
 if(!localStorage.getItem(KEY)){ 
@@ -103,6 +102,7 @@ function renderList() {
 renderList();
 
 function onClickTitle(event) {
+
   const books = JSON.parse(localStorage.getItem(KEY));
   const book = books.find(book => book.title === event.target.textContent);
   const markup = createPreviewMarkup(book);
@@ -123,8 +123,11 @@ function deleteBook(event) {
   localStorage.setItem(KEY, JSON.stringify(filterBooks));
   newList.innerHTML = '';
 
+
+
+
   const titleToRemove = newDiv2?.firstChild?.textContent;
-  const titleToCheck = books.find(book => book.id === id).title;
+  const titleToCheck = books.find((book) => book.id === id).title;
   if (titleToCheck === titleToRemove) {
     newDiv2.innerHTML = '';
   }
@@ -135,7 +138,6 @@ function editBook(event) {
   newDiv2.innerHTML = '';
 
   const id = event.target.parentNode.id;
-
   const books = JSON.parse(localStorage.getItem(KEY));
   const book = books.find(book => book.id === id);
 
@@ -148,14 +150,15 @@ function editBook(event) {
 
   function onBtnSave() {
   
-
     const indexOfBook = books.indexOf(book);
 
     books.splice(indexOfBook, 1, book);
 
     localStorage.setItem(KEY, JSON.stringify(books));
+
     newList.innerHTML = '';
     renderList();
+    
     newDiv2.innerHTML = '';
   
     newDiv2.insertAdjacentHTML("afterbegin",createPreviewMarkup(book));
