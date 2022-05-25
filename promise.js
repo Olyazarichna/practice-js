@@ -92,9 +92,7 @@ const makeTransaction = (transaction) => {
   };
   
   
-  /*
-   * Должно работать так
-   */
+
   makeTransaction({ id: 70, amount: 150 })
     .then(logSuccess)
     .catch(logError);
@@ -110,3 +108,18 @@ const makeTransaction = (transaction) => {
   makeTransaction({ id: 73, amount: 100 })
     .then(logSuccess)
     .catch(logError);
+
+//     let alphabet = "abcdefghijklmnopqrstuvwxyz";
+// let len = alphabet.length;
+// console.log(len);
+// for (let i = 0; i <= len; i++) {
+//   console.log(alphabet[i]);
+//   console.log(i);
+// }
+// // for (let j = 1; j < len; j++) {
+// //   console.log(alphabet[j]);
+// // }
+// // for (let k = 0; k < len; k++) {
+// //   console.log(alphabet[k]);
+// // }
+
